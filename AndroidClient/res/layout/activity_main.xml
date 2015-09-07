@@ -13,14 +13,14 @@
         android:id="@+id/response"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.11"
+        android:layout_weight="0.08"
         android:gravity="bottom"
         android:scrollbars="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="100sp" >
+        android:layout_marginBottom="50sp" >
 
         <EditText
             android:id="@+id/NoiDungTinNhan"
@@ -29,8 +29,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="Nhập tin nhắn"
-            android:inputType="textMultiLine" >
-
+            android:inputType="textMultiLine">
             <requestFocus />
         </EditText>
 
