@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import com.sinch.android.rtc.messaging.WritableMessage;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -24,8 +22,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import com.sinch.android.rtc.messaging.WritableMessage;
 
 public class MainActivity extends Activity {
 	
@@ -48,10 +51,16 @@ public class MainActivity extends Activity {
 		messagesList = (ListView) findViewById(R.id.listTinNhan);
         messageAdapter = new MessageAdapter(this);
         messagesList.setAdapter(messageAdapter);
-		//textResponse = (TextView)findViewById(R.id.response);
-		//textResponse.setText("");
-		//textResponse.setMovementMethod(new ScrollingMovementMethod());
-		//textResponse.scrollTo(0, Integer.MAX_VALUE);
+        messagesList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+			}
+        	
+		});
 		MyClientTask myClientTask = new MyClientTask("52.68.172.187",2015);
 		myClientTask.execute();
 	}
