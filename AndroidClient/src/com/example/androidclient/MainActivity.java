@@ -171,10 +171,11 @@ public class MainActivity extends Activity {
 							@Override
 							public void run() {
 								//textResponse.setText(textResponse.getText().toString()+"\n"+temp);
+								String TinNhan=st[0]+"!@#.>"+temp.subSequence(st[0].length()+1, temp.length());
 								if(st[0].equals("BẠN")){
-									messageAdapter.addMessage(new WritableMessage(st[0]+"!@#.>"+st[1], st[0]+"!@#.>"+st[1]), MessageAdapter.DIRECTION_INCOMING);
+									messageAdapter.addMessage(new WritableMessage(TinNhan, TinNhan), MessageAdapter.DIRECTION_INCOMING);
 								}else{
-									messageAdapter.addMessage(new WritableMessage(st[0]+"!@#.>"+st[1], st[0]+"!@#.>"+st[1]), MessageAdapter.DIRECTION_OUTGOING);
+									messageAdapter.addMessage(new WritableMessage(TinNhan,TinNhan), MessageAdapter.DIRECTION_OUTGOING);
 								}
 								
 								if(HienThongBao && !st[0].equals("BẠN")){
