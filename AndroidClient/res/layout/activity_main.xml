@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.08"
         android:gravity="bottom"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"
+        android:text="NoiDung" />
 
     <LinearLayout
         android:layout_width="match_parent"

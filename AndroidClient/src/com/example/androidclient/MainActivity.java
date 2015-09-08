@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
 		
 		NoiDung=(EditText) findViewById(R.id.NoiDungTinNhan);
 		textResponse = (TextView)findViewById(R.id.response);
+		textResponse.setText("");
 		textResponse.setMovementMethod(new ScrollingMovementMethod());
 		textResponse.scrollTo(0, Integer.MAX_VALUE);
 		MyClientTask myClientTask = new MyClientTask("52.68.172.187",2015);
@@ -64,7 +65,7 @@ public class MainActivity extends Activity {
 	public boolean onCreatePanelMenu(int featureId, Menu menu) {
 	    return false;
 	}
-	public void DongSocket(){
+	public void NgatKetNoi(){
 		DataOutputStream ps;
         try {
             ps = new DataOutputStream(sk.getOutputStream());
@@ -89,7 +90,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
-				DongSocket();
+				NgatKetNoi();
 				Intent intent = new Intent(MainActivity.this,Login.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(intent);
@@ -142,9 +143,9 @@ public class MainActivity extends Activity {
 				sk=socket;
 				DataOutputStream ps;
 		        try {
-		            ps = new DataOutputStream(sk.getOutputStream());
+		            ps = new DataOutputStream(socket.getOutputStream());
 		            ps.write(("online!@#."+TenDangNhap+"\r\n").getBytes("UTF8"));
-		            NoiDung.setText("");
+		            //NoiDung.setText("");
 
 		        } catch (IOException ex) {
 		        	ex.printStackTrace();
@@ -161,10 +162,12 @@ public class MainActivity extends Activity {
                         final String []st=str.split(":");
                         System.out.println(str);
                         final String temp=str;
+                        final String NoiDungCu=textResponse.getText().toString();
                         runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								textResponse.setText(textResponse.getText()+"\n"+temp);
+								textResponse.setText(textResponse.getText().toString()+"\n"+temp);
+								//textResponse.setText("\n"+temp);
 								if(HienThongBao && !st[0].equals("BẠN")){
 									if(st[1].length()>10){
 										showNotification("Bạn có tin nhắn từ: "+st[0],st[1].substring(0, 10)+"...");
@@ -179,11 +182,15 @@ public class MainActivity extends Activity {
                         
                     }
                 }
+		        //DongSocket();
+		        //NgatKetNoi();
 
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
+				//System.out.print("Loi");
 			} catch (IOException e) {
 				e.printStackTrace();
+				//System.out.print("Loi");
 			}
 			return null;
 		}
