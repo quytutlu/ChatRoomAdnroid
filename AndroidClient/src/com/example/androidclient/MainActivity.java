@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import com.sinch.android.rtc.messaging.WritableMessage;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
@@ -19,34 +21,37 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ListView;
 
 public class MainActivity extends Activity {
 	
-	TextView textResponse; 
+	//TextView textResponse; 
 	EditText NoiDung;
 	Socket sk;
 	boolean DongSocket=false;
 	String TenDangNhap;
 	boolean HienThongBao=true;
+	private MessageAdapter messageAdapter;
+    private ListView messagesList;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.messaging);
 		Intent intent = getIntent();
 		TenDangNhap = intent.getStringExtra("TenDangNhap");
-		
 		NoiDung=(EditText) findViewById(R.id.NoiDungTinNhan);
-		textResponse = (TextView)findViewById(R.id.response);
-		textResponse.setText("");
-		textResponse.setMovementMethod(new ScrollingMovementMethod());
-		textResponse.scrollTo(0, Integer.MAX_VALUE);
+		messagesList = (ListView) findViewById(R.id.listTinNhan);
+        messageAdapter = new MessageAdapter(this);
+        messagesList.setAdapter(messageAdapter);
+		//textResponse = (TextView)findViewById(R.id.response);
+		//textResponse.setText("");
+		//textResponse.setMovementMethod(new ScrollingMovementMethod());
+		//textResponse.scrollTo(0, Integer.MAX_VALUE);
 		MyClientTask myClientTask = new MyClientTask("52.68.172.187",2015);
 		myClientTask.execute();
 	}
@@ -162,15 +167,19 @@ public class MainActivity extends Activity {
                         final String []st=str.split(":");
                         System.out.println(str);
                         final String temp=str;
-                        final String NoiDungCu=textResponse.getText().toString();
                         runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								textResponse.setText(textResponse.getText().toString()+"\n"+temp);
-								//textResponse.setText("\n"+temp);
+								//textResponse.setText(textResponse.getText().toString()+"\n"+temp);
+								if(st[0].equals("BẠN")){
+									messageAdapter.addMessage(new WritableMessage(st[0]+"!@#.>"+st[1], st[0]+"!@#.>"+st[1]), MessageAdapter.DIRECTION_INCOMING);
+								}else{
+									messageAdapter.addMessage(new WritableMessage(st[0]+"!@#.>"+st[1], st[0]+"!@#.>"+st[1]), MessageAdapter.DIRECTION_OUTGOING);
+								}
+								
 								if(HienThongBao && !st[0].equals("BẠN")){
-									if(st[1].length()>10){
-										showNotification("Bạn có tin nhắn từ: "+st[0],st[1].substring(0, 10)+"...");
+									if(st[1].length()>30){
+										showNotification("Bạn có tin nhắn từ: "+st[0],st[1].substring(0, 30)+"...");
 									}else{
 										showNotification("Bạn có tin nhắn từ: "+st[0],st[1]);
 									}
