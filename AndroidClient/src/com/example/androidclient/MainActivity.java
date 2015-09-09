@@ -32,7 +32,6 @@ import com.sinch.android.rtc.messaging.WritableMessage;
 
 public class MainActivity extends Activity {
 	
-	//TextView textResponse; 
 	EditText NoiDung;
 	Socket sk;
 	boolean DongSocket=false;
@@ -62,6 +61,7 @@ public class MainActivity extends Activity {
         	
 		});
 		MyClientTask myClientTask = new MyClientTask("52.68.172.187",2015);
+        //MyClientTask myClientTask = new MyClientTask("192.168.1.104",2015);
 		myClientTask.execute();
 	}
 	@Override
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 		DataOutputStream ps;
         try {
             ps = new DataOutputStream(sk.getOutputStream());
-            ps.write((TenDangNhap+"!@#.exit\r\n").getBytes("UTF8"));
+            ps.writeUTF(TenDangNhap+"!@#.exit\r\n");
         } catch (IOException ex) {
         	ex.printStackTrace();
         }
@@ -129,7 +129,7 @@ public class MainActivity extends Activity {
 			DataOutputStream ps;
 			try {
 				ps = new DataOutputStream(sk.getOutputStream());
-				ps.write((TenDangNhap + "!@#." + NoiDung.getText() + "\r\n").getBytes("UTF8"));
+				ps.writeUTF(TenDangNhap + "!@#." + NoiDung.getText() + "\r\n");
 				NoiDung.setText("");
 
 			} catch (IOException ex) {
@@ -158,8 +158,7 @@ public class MainActivity extends Activity {
 				DataOutputStream ps;
 		        try {
 		            ps = new DataOutputStream(socket.getOutputStream());
-		            ps.write(("online!@#."+TenDangNhap+"\r\n").getBytes("UTF8"));
-		            //NoiDung.setText("");
+		            ps.writeUTF("online!@#."+TenDangNhap+"\r\n");
 
 		        } catch (IOException ex) {
 		        	ex.printStackTrace();
@@ -168,10 +167,7 @@ public class MainActivity extends Activity {
                     DataInputStream br;
                     try {
                         br = new DataInputStream(socket.getInputStream());
-                        byte[] data = new byte[1024];
-                        br.read(data);
-                        String str = null;
-                        str = new String(data, "UTF-8");
+                        String str = br.readUTF();
                         str = str.substring(0, str.indexOf("\r\n"));
                         final String []st=str.split(":");
                         System.out.println(str);
@@ -179,7 +175,6 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								//textResponse.setText(textResponse.getText().toString()+"\n"+temp);
 								String TinNhan=st[0]+"!@#.>"+temp.subSequence(st[0].length()+1, temp.length());
 								if(st[0].equals("BẠN")){
 									messageAdapter.addMessage(new WritableMessage(TinNhan, TinNhan), MessageAdapter.DIRECTION_INCOMING);
@@ -201,15 +196,11 @@ public class MainActivity extends Activity {
                         
                     }
                 }
-		        //DongSocket();
-		        //NgatKetNoi();
 
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
-				//System.out.print("Loi");
 			} catch (IOException e) {
 				e.printStackTrace();
-				//System.out.print("Loi");
 			}
 			return null;
 		}
